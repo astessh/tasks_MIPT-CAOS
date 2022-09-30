@@ -13,27 +13,39 @@
 
 Запрещается использовать какие-либо функции
  */
-#include <locale.h>
 #include <stdio.h>
-#include <wchar.h>
 
 int main() {
-  setlocale(LC_ALL, "");
   int read = 0;
   int unread = 0;
-  wint_t sym;
-  do {
-    sym = getwchar();
-    if (ferror(stdin) != 0) {
-      printf("%d %d", read, unread);
-      return 1;
+  char sym;
+  while ((sym = getchar()) != EOF) {
+    if (sym != EOF) {
+      if ((sym & 0b10000000) == 0) {
+        read++;
+      } else {
+        int length = 0;
+        if ((sym & 0b11110000) == 0b11110000) {
+          length = 3;
+        } else if ((sym & 0b1110000) == 0b1110000) {
+          length = 2;
+        }
+        if ((sym & 0b11000000) == 0b11000000) {
+          length = 1;
+        }
+        for (int i = 0; i < length; i++) {
+          sym = getchar();
+          if (sym == '\0' || (sym & 0b11000000) != 0b10000000 || sym == EOF) {
+            printf("%d %d", read, unread);
+            return 1;
+          }
+        }
+        if (length) {
+          unread++;
+        }
+      }
     }
-    if (sym <= 255) {
-      read++;
-    } else if (sym != WEOF) {
-      unread++;
-    }
-  } while (sym != WEOF);
+  }
   printf("%d %d", read, unread);
   return 0;
 }
