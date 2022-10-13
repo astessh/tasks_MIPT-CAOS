@@ -12,40 +12,46 @@
 В случае ошибки декодирования потока данных, необходимо вывести результаты подсчёта, полученные на момент обнаружения ошибки, и завершить работу программы с кодом ошибки 1.
 
 Запрещается использовать какие-либо функции
- */
+*/
+
 #include <stdio.h>
 
 int main() {
-  int read = 0;
-  int unread = 0;
-  char sym;
-  while ((sym = getchar()) != EOF) {
-    if (sym != EOF) {
-      if ((sym & 0b10000000) == 0) {
-        read++;
-      } else {
-        int length = 0;
-        if ((sym & 0b11110000) == 0b11110000) {
-          length = 3;
-        } else if ((sym & 0b1110000) == 0b1110000) {
-          length = 2;
+    const int first_bit = 0x80;
+    const int first_four_bits = 0xF0;
+    const int first_three_bits = 0xE0;
+    const int first_two_bits = 0xC0;
+
+    int read = 0;
+    int unread = 0;
+    char sym;
+    while ((sym = getchar()) != EOF) {
+        if (sym != EOF) {
+            if ((sym & first_bit) == 0) {
+                read++;
+            } else {
+                int length = 0;
+                if ((sym & first_four_bits) == first_four_bits) {
+                    length = 3;
+                } else if ((sym & first_three_bits) == first_three_bits) {
+                    length = 2;
+                }
+                if ((sym & first_two_bits) == first_two_bits) {
+                    length = 1;
+                }
+                for (int i = 0; i < length; i++) {
+                    sym = getchar();
+                    if (sym == '\0' || (sym & first_two_bits) != first_bit || sym == EOF) {
+                        printf("%d %d", read, unread);
+                        return 1;
+                    }
+                }
+                if (length) {
+                    unread++;
+                }
+            }
         }
-        if ((sym & 0b11000000) == 0b11000000) {
-          length = 1;
-        }
-        for (int i = 0; i < length; i++) {
-          sym = getchar();
-          if (sym == '\0' || (sym & 0b11000000) != 0b10000000 || sym == EOF) {
-            printf("%d %d", read, unread);
-            return 1;
-          }
-        }
-        if (length) {
-          unread++;
-        }
-      }
     }
-  }
-  printf("%d %d", read, unread);
-  return 0;
+    printf("%d %d", read, unread);
+    return 0;
 }

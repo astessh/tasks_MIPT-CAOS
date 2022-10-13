@@ -1,8 +1,8 @@
 //
 // Created by astesh on 28.09.22.
 //
-
-/*Реализуйте калькулятор выражений над множествами в обратной польской записи.
+/*
+Реализуйте калькулятор выражений над множествами в обратной польской записи.
 
 На стандартном потоке ввода задается последовательность, состоящая из символов-значений, и символов-операций.
 
@@ -19,68 +19,73 @@
 
 Вывести на экран полученное итоговое значение множества в нормализованной форме: сначала цифры, затем заглавные буквы, потом - строчные (упорядоченные по алфавиту).
 
-Для хранения множеств использовать, суммарно, не более 16 байт памяти.*/
+Для хранения множеств использовать, суммарно, не более 16 байт памяти.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
-uint64_t code(const char* a, int start, int ac_point) {
-  uint64_t res = 0;
-  for (int i = start; i < ac_point; i++) {
-    uint64_t temp = 0;
-    char el = a[i];
-    if (el >= '0' && el <= '9') {
-      temp += 1;
-      temp <<= el - '0';
-    } else if (el >= 'A' && el <= 'Z') {
-      temp += 1;
-      temp <<= el - 'A' + 10;
-    } else if (el >= 'a' && el <= 'z') {
-      temp += 1;
-      temp <<= el - 'a' + 36;
+#define NumberCount 10
+#define AlphabetSize 26
+#define MaxInput 1000
+
+uint64_t code(const char *a, int start, int ac_point) {
+    uint64_t res = 0;
+    for (int i = start; i < ac_point; i++) {
+        uint64_t temp = 0;
+        char el = a[i];
+        if (el >= '0' && el <= '9') {
+            temp += 1;
+            temp <<= el - '0';
+        } else if (el >= 'A' && el <= 'Z') {
+            temp += 1;
+            temp <<= el - 'A' + NumberCount;
+        } else if (el >= 'a' && el <= 'z') {
+            temp += 1;
+            temp <<= el - 'a' + NumberCount + AlphabetSize;
+        }
+        res |= temp;
     }
-    res |= temp;
-  }
-  return res;
+    return res;
 }
 
 void decode(uint64_t a) {
-  for (int i = 0; i < 62; i++) {
-    if ((a & 1) == 1) {
-      if (i >= 0 && i <= 9) {
-        printf("%c", i + '0');
-      } else if (i >= 10 && i <= 35) {
-        printf("%c", (i - 10) + 'A');
-      } else {
-        printf("%c", (i - 36) + 'a');
-      }
+    for (int i = 0; i < NumberCount + AlphabetSize * 2; i++) {
+        if ((a & 1) == 1) {
+            if (i >= 0 && i <= NumberCount - 1) {
+                printf("%c", i + '0');
+            } else if (i >= NumberCount && i <= AlphabetSize + NumberCount - 1) {
+                printf("%c", (i - NumberCount) + 'A');
+            } else {
+                printf("%c", (i - NumberCount - AlphabetSize) + 'a');
+            }
+        }
+        a >>= 1;
     }
-    a >>= 1;
-  }
 }
 
 int main() {
-  char* accum = (char*)malloc(1000);
-  char sym;
-  uint64_t all = 0;
-  fgets(accum, 1000, stdin);
-  int prev = 0;
-  for (int i = 0; i < 1000; i++) {
-    sym = accum[i];
-    if (sym == '^' || sym == '~' || sym == '&' || sym == '|') {
-      if (sym == '~') {
-        all = ~all;
-      } else if (sym == '^') {
-        all ^= code(accum, prev, i);
-      } else if (sym == '|') {
-        all |= code(accum, prev, i);
-      } else {
-        all &= code(accum, prev, i);
-      }
-      prev = i + 1;
+    char *accum = (char *) malloc(MaxInput);
+    char sym;
+    uint64_t all = 0;
+    fgets(accum, MaxInput, stdin);
+    int prev = 0;
+    for (int i = 0; i < MaxInput; i++) {
+        sym = accum[i];
+        if (sym == '^' || sym == '~' || sym == '&' || sym == '|') {
+            if (sym == '~') {
+                all = ~all;
+            } else if (sym == '^') {
+                all ^= code(accum, prev, i);
+            } else if (sym == '|') {
+                all |= code(accum, prev, i);
+            } else {
+                all &= code(accum, prev, i);
+            }
+            prev = i + 1;
+        }
     }
-  }
-  decode(all);
-  free(accum);
-  return 0;
+    decode(all);
+    free(accum);
+    return 0;
 }
