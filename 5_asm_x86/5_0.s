@@ -14,7 +14,7 @@ void very_important_function(size_t N);
 
 Используйте спецификатор lld при выводе числа. Числа в выводе должны быть разделены переводом строки.
 */
-.intel_syntax noprefix
+	.intel_syntax noprefix
 	.text
 	.global very_important_function
 
