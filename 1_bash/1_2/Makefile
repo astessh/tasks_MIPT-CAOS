@@ -1,8 +1,3 @@
-#
-# Created by astesh on 25.09.22.
-#
-
-
 EXE_NAME = program.exe
 CONFIG = compile.conf
 SOURCE = solution.c
