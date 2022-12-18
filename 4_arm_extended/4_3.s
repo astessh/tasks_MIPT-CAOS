@@ -6,7 +6,7 @@
 В качестве точки входа можно считать функцию main.
 */
 
-.text
+	.text
 	.global main
 	.extern free
 	.extern realloc

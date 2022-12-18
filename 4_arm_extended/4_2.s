@@ -6,7 +6,7 @@
 В качестве точки входа можно считать функцию main.
 */
 
-.text
+	.text
 	.global main
 	.extern getchar_unlocked
 	.extern putchar_unlocked

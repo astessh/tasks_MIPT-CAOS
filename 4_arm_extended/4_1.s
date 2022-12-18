@@ -5,13 +5,13 @@
 
 В качестве точки входа можно считать функцию main.
 */
-.data
-output_string: .asciz "%d\n"
-input_string: .asciz "%d %d"
-a: .word 0
-b: .word 0
+	.data
+output_string: 	.asciz "%d\n"
+input_string: 	.asciz "%d %d"
+a: 		.word 0
+b: 		.word 0
 
-.text
+	.text
 	.global main
 	.extern printf
 	.extern scanf
