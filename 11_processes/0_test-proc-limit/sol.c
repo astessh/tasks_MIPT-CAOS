@@ -15,8 +15,7 @@ int main() {
   if (pid > 0) {
     int status;
     waitpid(pid, &status, 0);
-  }
-  else if (-1 == pid) {
+  } else if (-1 == pid) {
     printf("%d\n", counter);
   }
   return 0;

@@ -40,13 +40,15 @@ void Sort(int file, int res, int64_t start, int64_t end) {
     lseek64(file, sp * int_size, SEEK_SET);
     read(file, &s, int_size);
     while (sp < end || fp < (start + end) / 2) {
-      if ((sp < end && fp < (start + end) / 2 && f <= s) || (sp >= end && fp < (start + end) / 2)) {
+      if ((sp < end && fp < (start + end) / 2 && f <= s)
+          || (sp >= end && fp < (start + end) / 2)) {
         lseek64(res, rp * int_size, SEEK_SET);
         write(res, &f, int_size);
         fp++;
         lseek64(file, fp * int_size, SEEK_SET);
         read(file, &f, int_size);
-      } else if ((sp < end && fp < (start + end) / 2 && s < f) || (fp >= (start + end) / 2 && sp < end)) {
+      } else if ((sp < end && fp < (start + end) / 2 && s < f)
+          || (fp >= (start + end) / 2 && sp < end)) {
         lseek64(res, rp * int_size, SEEK_SET);
         write(res, &s, int_size);
         sp++;

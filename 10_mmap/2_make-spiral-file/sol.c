@@ -60,7 +60,7 @@ int Execute(int file, int32_t m_s, int32_t width) {
     memcpy(arr + ind, buffer, sizeof(buffer));
   }
   for (int k = 0; k < m_s; k++) {
-    *(arr+(k+1)*m_s*width+k) = '\n';
+    *(arr + (k + 1) * m_s * width + k) = '\n';
   }
   msync(fil_con, size, MS_SYNC);
   munmap(fil_con, size);

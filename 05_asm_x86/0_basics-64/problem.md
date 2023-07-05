@@ -1,12 +1,12 @@
 # asm-x86/basics-64
 
 Реализуйте на языке ассемблера x86-64 функцию с сигнатурой:
+
 ```
 extern int *A;
 
 void very_important_function(size_t N);
 ```
-      
 
 Эта функция должна в цикле N раз:
 

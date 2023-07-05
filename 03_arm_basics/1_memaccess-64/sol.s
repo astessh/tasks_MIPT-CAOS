@@ -1,4 +1,3 @@
-
 	.text
 	.global sum
 sum:

@@ -1,6 +1,7 @@
 # asm-x86/arrays-64
 
 Реализуйте функцию на языке ассемблера x86-64 с сигнатурой:
+
 ```
 extern void sum(size_t N, const int *A, const int *B, int *R);
 ```   
